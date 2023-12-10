@@ -9,7 +9,10 @@ export default function Toggle(props: ToggleProps) {
     return (
         <div
             className={cx(
-                "rounded-full w-10 h-5 bg-slate-400 flex items-center",
+                "rounded-full",
+                "w-10 h-5",
+                "bg-secondary border border-muted",
+                "flex items-center",
             )}
             onClick={() => {
                 onChange(!checked);
@@ -24,8 +27,8 @@ export default function Toggle(props: ToggleProps) {
             />
             <div
                 className={cx(
-                    "rounded-full w-4 h-4 bg-lime-500",
-                    checked ? "translate-x-5" : "translate-x-0",
+                    "rounded-full w-4 h-4 bg-primary transition",
+                    checked ? "translate-x-5" : "translate-x-1",
                 )}
             />
         </div>
