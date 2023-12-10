@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary: 0, 0, 0;
+    --secondary: 255, 255, 255;
+    --accent: 255, 255, 0;
+}
+
+[data-theme="dark"] {
+    --primary: 85, 85, 35;
+    --secondary: 214, 219, 220;
+    --accent: 85, 85, 35;
+}
+
+body {
+}
