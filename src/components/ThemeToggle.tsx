@@ -1,6 +1,5 @@
-"use client";
 import { useEffect, useState } from "react";
-import Toggle from "@rinzai/components/Toggle";
+import Toggle from "./Toggle";
 
 export default function ThemeToggle() {
     const [isDarkMode, setDarkMode] = useState(false);

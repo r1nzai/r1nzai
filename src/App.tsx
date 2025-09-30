@@ -1,11 +1,11 @@
-import Header from "@rinzai/components/Header";
-import { cx } from "@rinzai/utils/cx";
-import Image from "next/image";
-import Typer from "@rinzai/components/Typer";
+import { cx } from '@rinzai/zen'
+import Header from './components/Header'
+import Typer from './components/Typer'
+import fern from "./assets/fern.png"
+function App() {
 
-export default function Home() {
-    return (
-        <main className={cx("bg-background", "min-h-screen flex flex-col")}>
+  return (
+    <main className={cx("bg-background", "min-h-screen flex flex-col")}>
             <Header />
             <section
                 className={cx("flex items-center justify-center grow gap-5")}
@@ -19,8 +19,8 @@ export default function Home() {
                         className={"text-primary"}
                     />
                 </div>
-                <Image
-                    src={"/fern.png"}
+                <img
+                    src={fern}
                     alt={"fern"}
                     width={160}
                     height={90}
@@ -28,5 +28,7 @@ export default function Home() {
                 />
             </section>
         </main>
-    );
+  )
 }
+
+export default App

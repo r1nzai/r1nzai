@@ -1,4 +1,4 @@
-import { cx } from "@rinzai/utils/cx";
+import { cx } from "@rinzai/zen";
 
 interface ToggleProps extends Omit<React.ComponentProps<"input">, "onChange"> {
     onChange: (e: boolean) => void;

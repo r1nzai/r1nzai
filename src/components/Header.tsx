@@ -1,5 +1,5 @@
-import { cx } from "@rinzai/utils/cx";
-import ThemeToggle from "@rinzai/components/theme/ThemeToggle";
+import { cx } from "@rinzai/zen";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
     return (
