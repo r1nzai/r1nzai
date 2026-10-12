@@ -1,12 +1,6 @@
 {
   "files": [],
-  "compilerOptions": {
-    "paths": {
-      "@rinzai/*": [
-        "./src/*"
-      ]
-    }
-  },
+  "compilerOptions": {},
   "references": [
     {
       "path": "./tsconfig.app.json"
