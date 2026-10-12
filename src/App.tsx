@@ -292,7 +292,8 @@ export default function App() {
         <ThemeToggle />
       </div>
 
-      <main id="top" className="overflow-x-clip">
+      <main id="top" className="relative overflow-x-clip">
+        <Rail />
         {/* Hero: who I am, not what I sell. The name, the one line, and Fern. */}
         <section className="rise mx-auto grid min-h-svh max-w-7xl content-center items-center gap-10 px-4 py-12 sm:px-8 md:grid-cols-[1fr_auto] md:gap-16">
           <div className="relative justify-self-start md:order-last md:justify-self-end">
@@ -326,7 +327,6 @@ export default function App() {
             </div>
           </div>
         </section>
-
         <div className="mx-auto flex max-w-7xl flex-col gap-24 px-4 py-24 sm:px-8">
           <section aria-labelledby="work" className="flex flex-col gap-12">
             <Display id="work" top="Selected" bottom="Projects" />
@@ -451,6 +451,127 @@ export default function App() {
         </p>
       </footer>
     </>
+  );
+}
+
+/** The sections below the hero, as the rail's index lists them. */
+const SECTIONS = [
+  { id: "work", label: "Projects" },
+  { id: "experience", label: "At work" },
+  { id: "off-work", label: "Off work" },
+  { id: "contact", label: "Contact" },
+];
+
+/**
+ * Where the screen and the sections sit along the page, as fractions of its height. The screen's span is written
+ * straight to the rail as --view-top and --view-size (it changes every frame of a scroll); the sections' starts,
+ * and which one crosses the middle of the screen (none while the hero fills it), go through state.
+ */
+function usePageMap(rail: React.RefObject<HTMLElement | null>) {
+  const [starts, setStarts] = useState<number[]>([]);
+  const [active, setActive] = useState<string | null>(null);
+  useEffect(() => {
+    const el = rail.current;
+    if (!el) return;
+    const sections = SECTIONS.map(({ id }) => document.getElementById(id)?.closest("section"));
+    let tops: number[] = [];
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const height = document.documentElement.scrollHeight;
+      el.style.setProperty("--view-top", `${scrollY / height}`);
+      el.style.setProperty("--view-size", `${innerHeight / height}`);
+      // The last sections may be too short to reach the middle; at the very bottom, any that has started counts.
+      const atBottom = scrollY + innerHeight >= height - 1;
+      const probe = atBottom ? 1 : (scrollY + innerHeight / 2) / height;
+      const i = tops.reduce((last, top, j) => (top <= probe ? j : last), -1);
+      setActive(i < 0 ? null : SECTIONS[i].id);
+    };
+    const measure = () => {
+      const height = document.documentElement.scrollHeight;
+      tops = sections.map((s) => (s ? (s.getBoundingClientRect().top + scrollY) / height : 1));
+      setStarts(tops);
+      update();
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    measure();
+    addEventListener("scroll", schedule, { passive: true });
+    // The page's height changes with the viewport and as fonts and images settle.
+    const resize = new ResizeObserver(measure);
+    resize.observe(document.body);
+    addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener("scroll", schedule);
+      removeEventListener("resize", measure);
+      resize.disconnect();
+    };
+  }, [rail]);
+  return { starts, active };
+}
+
+/**
+ * From 1024px the page has no scrollbar, and this stands in for it at the right edge: the track is the whole page and
+ * the lit stretch is what's on screen. Below 1400px it's just that, in the page's side padding; once there are
+ * margins (as the docked name uses the left one) it moves to the middle of the right one and marks the sections where
+ * they start, numbered like the project cards, so from the first screen you can see how much is below and what. The
+ * section you're in is lit; names show on hover and focus. (pr-8 centres the track with its numbers, which hang off
+ * its right side, in the margin.)
+ */
+function Rail() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { starts, active } = usePageMap(ref);
+  return (
+    <div
+      ref={ref}
+      className="fixed inset-y-20 right-0 z-40 hidden w-8 justify-center lg:flex min-[1400px]:w-[calc((100vw-80rem)/2)] min-[1400px]:pr-8"
+    >
+      <div className="relative h-full w-px bg-tint/10">
+        <span
+          aria-hidden
+          className="absolute -inset-x-px rounded-full bg-primary"
+          style={{
+            top: "calc(var(--view-top, 0) * 100%)",
+            height: "calc(var(--view-size, 1) * 100%)",
+          }}
+        />
+        <nav aria-label="Sections" className="hidden min-[1400px]:block">
+          <ol>
+            {SECTIONS.map(({ id, label: name }, i) => (
+              <li
+                key={id}
+                className="absolute left-0 -translate-y-1/2"
+                style={{ top: `${(starts[i] ?? 1) * 100}%` }}
+              >
+                <a
+                  href={`#${id}`}
+                  aria-current={active === id ? "location" : undefined}
+                  className={cx(
+                    "group relative flex items-center gap-2 py-1.5 text-xs font-medium tabular-nums transition-colors hover:text-foreground",
+                    active === id ? "text-primary" : "text-muted-foreground",
+                  )}
+                >
+                  <span aria-hidden className="h-px w-2 bg-current" />
+                  {String(i + 1).padStart(2, "0")}
+                  <span className="sr-only">, {name}</span>
+                  <span
+                    aria-hidden
+                    className={cx(
+                      label,
+                      "glass pointer-events-none absolute top-1/2 right-[calc(100%+1rem)] -translate-y-1/2 rounded-full border border-tint/10 px-3 py-1 whitespace-nowrap text-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100",
+                    )}
+                  >
+                    {name}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </div>
+    </div>
   );
 }
 

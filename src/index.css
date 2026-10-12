@@ -15,6 +15,24 @@
   }
 }
 
+/* Jumps to a section land clear of the bar the docked name sits on (68px), with room to breathe. */
+html {
+  scroll-padding-top: 6rem;
+}
+
+/*
+ * From 1024px the section rail (Rail in src/App.tsx) stands in for the scrollbar, so it goes, and 100vw is the page's
+ * width. Narrower, the browser's own stays.
+ */
+@media (min-width: 64rem) {
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none; /* Safari before 18.2 */
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
