@@ -10,7 +10,6 @@ import {
   useCopyToClipboard,
 } from "@rinzai/zen";
 import { useEffect, useRef, useState } from "react";
-import fern from "./assets/fern.webp";
 import NameTyper from "./NameTyper";
 import { useReducedMotion } from "./useReducedMotion";
 import {
@@ -295,14 +294,14 @@ export default function App() {
 
       <main id="top" className="overflow-x-clip">
         {/* Hero: who I am, not what I sell. The name, the one line, and Fern. */}
-        <section className="rise mx-auto grid min-h-dvh max-w-7xl content-center items-center gap-10 px-4 py-12 sm:px-8 md:grid-cols-[1fr_auto] md:gap-16">
+        <section className="rise mx-auto grid min-h-svh max-w-7xl content-center items-center gap-10 px-4 py-12 sm:px-8 md:grid-cols-[1fr_auto] md:gap-16">
           <div className="relative justify-self-start md:order-last md:justify-self-end">
             <div
               aria-hidden
               className="absolute inset-0 -m-12 rounded-full bg-[radial-gradient(closest-side,oklch(var(--glow)/0.45),transparent)] blur-2xl"
             />
             <img
-              src={fern}
+              src="/fern.webp"
               alt=""
               width={288}
               height={288}
